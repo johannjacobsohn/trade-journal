@@ -3,10 +3,13 @@
 
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { resolve } from "node:path";
+import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [TanStackRouterVite({ autoCodeSplitting: true }), react(), svgr()],
   server: {
     proxy: {
       '/api': {
@@ -21,4 +24,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
   },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    }
+  }
 })
