@@ -22,6 +22,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/themes": "^3.2.1",
+    "@tanstack/react-query": "^5.80.6",
     "@tanstack/react-router": "^1.114.3",
     "@tanstack/react-router-devtools": "^1.114.3",
     "@tanstack/router-plugin": "^1.114.3",

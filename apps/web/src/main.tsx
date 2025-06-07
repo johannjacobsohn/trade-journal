@@ -4,6 +4,11 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { Theme } from '@radix-ui/themes'
 import { ThemeProvider } from 'next-themes'
 
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
 import '@radix-ui/themes/styles.css'
 
 // Import the generated route tree
@@ -31,6 +36,8 @@ declare module '@tanstack/react-router' {
   }
 }
 
+const queryClient = new QueryClient()
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
@@ -39,7 +46,9 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <ThemeProvider attribute="class">
         <Theme accentColor="pink" grayColor="slate">
-          <RouterProvider router={router} />
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
         </Theme>
       </ThemeProvider>
     </StrictMode>,
