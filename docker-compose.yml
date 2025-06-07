@@ -5,8 +5,8 @@ services:
       context: ./apps/web/
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - 8080:8080
+    # ports:
+    #   - 8080:8080
 
   postgres:
     image: postgres:15
@@ -29,18 +29,14 @@ services:
       context: ./apps/api
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - 3000:3000
     networks:
       - app_network
+    expose:
+      - 3000
 
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
 networks:
   app_network:
-    external: true
 
-# Define volumes for persistent data storage
 volumes:
   postgres_data:
     driver: local

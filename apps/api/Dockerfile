@@ -6,13 +6,13 @@ RUN mkdir /app
 WORKDIR /app
 
 # Upgrade and install git
-RUN apk --no-cache add git pnpm
+RUN apk --no-cache add git
 
 # Copy essential files
 # COPY package.json pnpm-lock.yaml tsconfig.json ./
 # COPY package.json package-lock.json ./
-COPY package.json ./
-COPY src src
+COPY package.json tsconfig.json ./
+COPY . .
 
 # Install dependencies and build
 RUN npm install -g pnpm
@@ -26,6 +26,7 @@ WORKDIR /app
 
 # Copy build output from builder
 COPY --from=builder /app .
+RUN npx prisma generate
 
 # Expose port for health check with fly.io
 EXPOSE 3000/tcp
@@ -35,4 +36,4 @@ ENV SERVER_HOSTNAME=0.0.0.0
 ENV PORT=3000
 
 # Start the application
-CMD ["pnpm", "run", "start"]
+CMD ["npm", "run", "start"]
