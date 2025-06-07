@@ -6,11 +6,12 @@ RUN mkdir /app
 WORKDIR /app
 
 # Upgrade and install git
-RUN apk --no-cache add git
+RUN apk --no-cache add git pnpm
 
 # Copy essential files
 # COPY package.json pnpm-lock.yaml tsconfig.json ./
-COPY package.json package-lock.json ./
+# COPY package.json package-lock.json ./
+COPY package.json ./
 COPY src src
 
 # Install dependencies and build
@@ -34,4 +35,4 @@ ENV SERVER_HOSTNAME=0.0.0.0
 ENV PORT=3000
 
 # Start the application
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
