@@ -1,13 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { OrdersTable } from '@/components/orders/OrdersTable';
 import type { Order } from '@/components/orders/OrdersTable';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button, TextField, Flex, Box, Popover } from '@radix-ui/themes';
+import React from 'react';
 
 export const Route = createFileRoute('/orders')({
   component: OrdersPage,
 })
 
 function OrdersPage() {
+  const queryClient = useQueryClient();
   const { data: orders, isLoading, error } = useQuery<Order[]>({
     queryKey: ['orders'],
     queryFn: async () => {
@@ -17,13 +20,152 @@ function OrdersPage() {
     },
   });
 
+  // Dialog State
+  const [open, setOpen] = React.useState(false);
+  const [form, setForm] = React.useState({ symbol: '', quantity: '', price: '', side: 'buy' });
+  const [formError, setFormError] = React.useState<string | null>(null);
+  const [deletingId, setDeletingId] = React.useState<number | null>(null);
+
+  const addOrderMutation = useMutation({
+    mutationFn: async (order: { symbol: string; quantity: number; price: number; side: 'buy' | 'sell' }) => {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order),
+      });
+      if (!res.ok) throw new Error('Fehler beim Anlegen der Order');
+      return res.json();
+    },
+    onSuccess: () => {
+      setOpen(false);
+      setForm({ symbol: '', quantity: '', price: '', side: 'buy' });
+      setFormError(null);
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+    onError: (err: unknown) => {
+      setFormError(err instanceof Error ? err.message : 'Unbekannter Fehler');
+    },
+  });
+
+  const deleteOrderMutation = useMutation({
+    mutationFn: async (id: number) => {
+      setDeletingId(id);
+      const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Fehler beim Löschen der Order');
+      return res;
+    },
+    onSuccess: () => {
+      setDeletingId(null);
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+    onError: () => {
+      setDeletingId(null);
+    },
+  });
+
+  const editOrderMutation = useMutation({
+    mutationFn: async (order: { id: number; symbol: string; quantity: number; price: number; side: 'buy' | 'sell' }) => {
+      const res = await fetch(`/api/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol: order.symbol, quantity: order.quantity, price: order.price, side: order.side }),
+      });
+      if (!res.ok) throw new Error('Fehler beim Bearbeiten der Order');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    }
+  });
+
+  function handleInput(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError(null);
+    if (!form.symbol || !form.quantity || !form.price || !form.side) {
+      setFormError('Alle Felder sind Pflichtfelder!');
+      return;
+    }
+    addOrderMutation.mutate({
+      symbol: form.symbol,
+      quantity: Number(form.quantity),
+      price: Number(form.price),
+      side: form.side as 'buy' | 'sell',
+    });
+  }
+
+  function handleDelete(id: number) {
+    deleteOrderMutation.mutate(id);
+  }
+
+
+  function handleEdit(order: Order) {
+    editOrderMutation.mutate({
+      id: order.id,
+      symbol: order.symbol,
+      quantity: Number(order.quantity),
+      price: Number(order.price),
+      side: order.side as 'buy' | 'sell',
+    });
+  }
+
   if (isLoading) return <div>Lade Bestellungen...</div>;
   if (error) return <div style={{ color: 'red' }}>Fehler: {(error as Error).message}</div>;
 
   return (
     <div>
-      <h1>Orders</h1>
-      <OrdersTable orders={orders ?? []} />
+      <Flex justify="between" align="center" mb="4">
+        <h1>Orders</h1>
+        <Popover.Root open={open} onOpenChange={setOpen}>
+          <Popover.Trigger>
+            <Button>Add Order</Button>
+          </Popover.Trigger>
+          <Popover.Content style={{ maxWidth: 400 }}>
+            Order hinzufügen
+            <form onSubmit={handleSubmit}>
+              <Flex direction="column" gap="3">
+                <TextField.Root
+                  placeholder="Symbol"
+                  name="symbol"
+                  value={form.symbol}
+                  onChange={handleInput}
+                />
+                <TextField.Root
+                  placeholder="Menge"
+                  name="quantity"
+                  type="number"
+                  value={form.quantity}
+                  onChange={handleInput}
+                />
+                <TextField.Root
+                  placeholder="Preis"
+                  name="price"
+                  type="number"
+                  value={form.price}
+                  onChange={handleInput}
+                />
+                <Box>
+                  <select name="side" value={form.side} onChange={handleInput} style={{ width: '100%', padding: 8 }}>
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                  </select>
+                </Box>
+                {formError && <Box style={{ color: 'red' }}>{formError}</Box>}
+                <Button type="submit" loading={addOrderMutation.isPending} disabled={addOrderMutation.isPending}>
+                  Hinzufügen
+                </Button>
+              </Flex>
+            </form>
+            <Popover.Close>
+              <Button variant="soft" color="gray" mt="3" style={{ width: '100%' }}>Abbrechen</Button>
+            </Popover.Close>
+          </Popover.Content>
+        </Popover.Root>
+      </Flex>
+      <OrdersTable orders={orders ?? []} onDelete={handleDelete} deletingId={deletingId} onEdit={handleEdit} editOrderMutation={editOrderMutation} />
     </div>
   );
 }
