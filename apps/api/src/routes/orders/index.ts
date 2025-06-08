@@ -159,20 +159,22 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       }
     },
     async handler(request, reply) {
-      const { symbol, quantity, price, side } = request.body as Omit<Order, 'id'>
-
-      if (!symbol || !quantity || !price || !side) {
+      const { symbol, quantity, price, side, ...rest } = request.body as Omit<Order, 'id'>
+      const data = { symbol, quantity,  price, side } 
+      
+      for (const key in data) {
+        if (data[key as keyof typeof data] === undefined) {
+          reply.code(400)
+          return { error: `Missing field: ${key}` }
+        }
+      }
+      for (const key in rest) {
         reply.code(400)
-        return { error: 'Missing fields' }
+        return { error: `Unexpected field: ${key}` }
       }
 
       const order = await prisma.order.create({
-        data: {
-          symbol: symbol,
-          quantity: quantity,
-          price: price,
-          side: side
-        }
+        data
       })
 
       reply.code(201)
