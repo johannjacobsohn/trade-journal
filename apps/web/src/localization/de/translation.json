@@ -47,5 +47,7 @@
   "Set": "Setzen",
   "Loading Depot...": "Lade Depotwert...",
   "Error loading depot": "Fehler beim Laden des Depotwerts",
-  "Comments": "Kommentar"
+  "Comments": "Kommentar",
+  "Import Dummy Data": "Dummy-Daten importieren",
+  "Importing...": "Importiere..."
 }

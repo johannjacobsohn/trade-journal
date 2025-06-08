@@ -46,5 +46,7 @@
   "Set": "Set",
   "Loading Depot...": "Loading Depot...",
   "Error loading depot": "Error loading depot",
-  "Comments": "Comments"
+  "Comments": "Comments",
+  "Import Dummy Data": "Import Dummy Data",
+  "Importing...": "Importing..."
 }
