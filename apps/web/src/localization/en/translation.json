@@ -20,5 +20,12 @@
   "Submit": "Add",
   "Hinzufügen": "Add",
   "Order hinzufügen": "Add Order",
-  "Abbrechen": "Cancel"
+  "Abbrechen": "Cancel",
+  "Filter": "Filter",
+  "Sort by": "Sort by",
+  "All": "All",
+  "Buy": "Buy",
+  "Sell": "Sell",
+  "Ascending": "Ascending",
+  "Descending": "Descending"
 }

@@ -2,11 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { OrdersTable } from '@/components/orders/OrdersTable';
 import type { Order } from '@/components/orders/OrdersTable';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Flex, Popover } from '@radix-ui/themes';
+import { Button, Flex, Popover, Heading, Skeleton } from '@radix-ui/themes';
 import { OrdersForm } from '@/components/orders/OrdersForm';
 import type { OrdersFormValues } from '@/components/orders/OrdersForm';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { OrdersTableFilterSort } from '@/components/orders/OrdersTableFilterSort';
 
 export const Route = createFileRoute('/orders')({
   component: OrdersPage,
@@ -15,10 +16,18 @@ export const Route = createFileRoute('/orders')({
 function OrdersPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+
+  const [filterSymbol, setFilterSymbol] = React.useState('');
+  const [filterSide, setFilterSide] = React.useState('');
+  const [sortKey, setSortKey] = React.useState<'id' | 'symbol' | 'quantity' | 'price' | 'side'>('id');
+  const [sortDir, setSortDir] = React.useState<'asc' | 'desc'>('asc');
+
   const { data: orders, isLoading, error } = useQuery<Order[]>({
-    queryKey: ['orders'],
+    queryKey: ['orders', filterSymbol, filterSide, sortKey, sortDir],
     queryFn: async () => {
-      const res = await fetch('/api/orders');
+      const res = await fetch('/api/orders?symbol=' + encodeURIComponent(filterSymbol) +
+        (filterSide ? `&side=${encodeURIComponent(filterSide)}` : '') +
+        `&sort=${encodeURIComponent(`${sortKey}:${sortDir}`)}`);
       if (!res.ok) throw new Error('Fehler beim Laden der Orders');
       return res.json();
     },
@@ -111,13 +120,13 @@ function OrdersPage() {
     });
   }
 
-  if (isLoading) return <div>{t('Loading Orders...')}</div>;
+  // if (isLoading) return <div>{t('Loading Orders...')}</div>;
   if (error) return <div style={{ color: 'red' }}>{t('Error')}: {(error as Error).message}</div>;
 
   return (
-    <div>
-      <Flex justify="between" align="center" mb="4">
-        <h1>{t('Orders')}</h1>
+    <Flex direction={'column'} gap="6">
+      <Flex justify="between" align="center">
+        <Heading as="h1" size="8">{t('Orders')}</Heading>
         <Popover.Root open={open} onOpenChange={setOpen}>
           <Popover.Trigger>
             <Button>{t('Add Order')}</Button>
@@ -138,7 +147,21 @@ function OrdersPage() {
           </Popover.Content>
         </Popover.Root>
       </Flex>
-      <OrdersTable orders={orders ?? []} onDelete={handleDelete} deletingId={deletingId} onEdit={handleEditSubmit} />
-    </div>
+
+      <OrdersTableFilterSort
+        filterSymbol={filterSymbol}
+        setFilterSymbol={setFilterSymbol}
+        filterSide={filterSide}
+        setFilterSide={setFilterSide}
+        sortKey={sortKey}
+        setSortKey={setSortKey}
+        sortDir={sortDir}
+        setSortDir={setSortDir}
+      />
+      
+      <Skeleton loading={isLoading}>
+        <OrdersTable orders={orders ?? []} onDelete={handleDelete} deletingId={deletingId} onEdit={handleEditSubmit} />
+      </Skeleton>
+    </Flex>
   );
 }
