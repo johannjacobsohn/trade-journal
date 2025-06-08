@@ -7,3 +7,27 @@ body {
   background-color: var(--accent-1);
   height: 100vh;
 }
+
+:root {
+  --nav-width: 200px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --nav-width: 50px;
+  }
+}
+
+.navigation {
+  width: var(--nav-width);
+}
+
+.main-content {
+  width: 'calc(100% - var(--nav-width))'; 
+}
+
+@media (max-width: 600px) {
+  .nav-label {
+    display: none;
+  }
+}

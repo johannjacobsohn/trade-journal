@@ -15,12 +15,15 @@ export const Route = createRootRoute({
       <Bg style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1, opacity: .5 }} width="100vw" height="100vh" />
       <Flex className="h-screen" direction="column" gap="4" >
         <Flex>
-          <Flex direction="column" gap="2" className="navigation" style={{ width: '200px'}} align={'center'} pb="5">
+          <Flex direction="column" gap="2" className="navigation" align={'center'} pb="5">
             <Flex gap="2" justify='center' m="8">
               <Avatar
                 src={'https://i.pravatar.cc/128'}
                 fallback={"ME"}
-                size="6"
+                size={{
+                  sm: "3",
+                  md: "6",
+                }}
                 radius="full"
                 style={{ cursor: 'pointer' }}
               />
@@ -34,7 +37,7 @@ export const Route = createRootRoute({
             />
           </Flex>
 
-          <main className="main-content" style={{ width: 'calc(100% - 200px)', height: "100vh", overflow: "scroll"}}>
+          <main className="main-content" style={{ height: "100vh", overflow: "scroll"}}>
             <Box p="6" pt="9">
               <Outlet />
             </Box>

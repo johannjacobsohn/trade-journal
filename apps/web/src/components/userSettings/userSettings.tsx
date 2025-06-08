@@ -38,7 +38,7 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
           <Link asChild style={{ cursor: 'pointer' }}>
             <Flex gap="2" align="center" >
               <FiSettings />
-              <Text>Settings</Text>
+              <Text className='nav-label'>Settings</Text>
             </Flex>
           </Link>
         </DropdownMenu.Trigger>
