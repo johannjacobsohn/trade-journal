@@ -7,7 +7,7 @@ import { OrdersForm } from '@/components/orders/OrdersForm';
 import type { OrdersFormValues } from '@/components/orders/OrdersForm';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { OrdersTableFilterSort } from '@/components/orders/OrdersTableFilterSort';
+import { SortFilter } from '@/components/SortFilter';
 
 export const Route = createFileRoute('/orders')({
   component: OrdersPage,
@@ -18,7 +18,7 @@ function OrdersPage() {
   const queryClient = useQueryClient();
 
   const [filterSymbol, setFilterSymbol] = React.useState('');
-  const [filterSide, setFilterSide] = React.useState('');
+  const [filterSide] = React.useState('');
   const [sortKey, setSortKey] = React.useState<'id' | 'symbol' | 'quantity' | 'price' | 'side'>('id');
   const [sortDir, setSortDir] = React.useState<'asc' | 'desc'>('asc');
 
@@ -148,16 +148,24 @@ function OrdersPage() {
         </Popover.Root>
       </Flex>
 
-      <OrdersTableFilterSort
-        filterSymbol={filterSymbol}
-        setFilterSymbol={setFilterSymbol}
-        filterSide={filterSide}
-        setFilterSide={setFilterSide}
-        sortKey={sortKey}
-        setSortKey={setSortKey}
-        sortDir={sortDir}
-        setSortDir={setSortDir}
-      />
+      <Flex gap="4" align="center">
+        <SortFilter
+          filterValue={filterSymbol}
+          setFilterValue={setFilterSymbol}
+          filterLabel={t('Filter by symbol')}
+          sortKey={sortKey}
+          setSortKey={setSortKey}
+          sortDir={sortDir}
+          setSortDir={setSortDir}
+          sortOptions={[
+            { value: 'id', label: 'ID' },
+            { value: 'symbol', label: 'Symbol' },
+            { value: 'quantity', label: 'Quantity' },
+            { value: 'price', label: 'Price' },
+            { value: 'side', label: 'Side' },
+          ]}
+        />
+      </Flex>
       
       <Skeleton loading={isLoading}>
         <OrdersTable orders={orders ?? []} onDelete={handleDelete} deletingId={deletingId} onEdit={handleEditSubmit} />

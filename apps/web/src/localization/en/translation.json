@@ -33,5 +33,10 @@
   "Average Price": "Average Price",
   "Realized PnL": "Realized PnL",
   "Loading Trades...": "Loading Trades...",
-  "Error loading trades": "Error loading trades"
+  "Error loading trades": "Error loading trades",
+  "Open Stock Positions": "Open Stock Positions",
+  "Shares": "Shares",
+  "Invested Capital": "Invested Capital",
+  "Loading Open Stock...": "Loading Open Stock...",
+  "Error loading open stock": "Error loading open stock"
 }

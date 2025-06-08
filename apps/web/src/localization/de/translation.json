@@ -34,5 +34,10 @@
   "Average Price": "Durchschnittspreis",
   "Realized PnL": "Realisierter G/V",
   "Loading Trades...": "Lade Trades...",
-  "Error loading trades": "Fehler beim Laden der Trades"
+  "Error loading trades": "Fehler beim Laden der Trades",
+  "Open Stock Positions": "Offene Aktienpositionen",
+  "Shares": "Aktien",
+  "Invested Capital": "Investiertes Kapital",
+  "Loading Open Stock...": "Lade offene Aktienpositionen...",
+  "Error loading open stock": "Fehler beim Laden der offenen Aktienpositionen"
 }
