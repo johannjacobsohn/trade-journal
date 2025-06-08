@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
-// import { PrismaClient } from '@prisma/client'
 import { PrismaClient } from '../../generated/prisma/client'
 
 const orderSchema = {

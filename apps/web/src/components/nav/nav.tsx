@@ -49,6 +49,14 @@ export function Nav(){
           </Flex>
         </Link>
       </li>
+      <li style={{ marginBottom: '8px' }}>
+        <Link to="/analytics">
+          <Flex align="center" gap="2">
+            <FiGrid size="20" />
+            <Text size="3">{t("Analytics")}</Text>
+          </Flex>
+        </Link>
+      </li>
     </ul>
   )
 }

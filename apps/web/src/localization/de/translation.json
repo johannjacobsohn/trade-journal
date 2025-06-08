@@ -49,5 +49,16 @@
   "Error loading depot": "Fehler beim Laden des Depotwerts",
   "Comments": "Kommentar",
   "Import Dummy Data": "Dummy-Daten importieren",
-  "Importing...": "Importiere..."
+  "Importing...": "Importiere...",
+  "Analytics": "Analytics",
+  "Loading Analytics...": "Lade Analytics...",
+  "Error loading analytics": "Fehler beim Laden der Analytics",
+  "Completed Trades": "Abgeschlossene Trades",
+  "Win Rate": "Trefferquote",
+  "Profit Factor": "Profitfaktor",
+  "Average Win": "Durchschnittsgewinn",
+  "Average Loss": "Durchschnittsverlust",
+  "Average Hold Duration": "Ø Haltedauer",
+  "days": "Tage",
+  "Order Chart": "Order-Chart"
 }

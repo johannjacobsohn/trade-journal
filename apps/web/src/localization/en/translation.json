@@ -48,5 +48,16 @@
   "Error loading depot": "Error loading depot",
   "Comments": "Comments",
   "Import Dummy Data": "Import Dummy Data",
-  "Importing...": "Importing..."
+  "Importing...": "Importing...",
+  "Analytics": "Analytics",
+  "Loading Analytics...": "Loading Analytics...",
+  "Error loading analytics": "Error loading analytics",
+  "Completed Trades": "Completed Trades",
+  "Win Rate": "Win Rate",
+  "Profit Factor": "Profit Factor",
+  "Average Win": "Average Win",
+  "Average Loss": "Average Loss",
+  "Average Hold Duration": "Average Hold Duration",
+  "days": "days",
+  "Order Chart": "Order Chart"
 }
