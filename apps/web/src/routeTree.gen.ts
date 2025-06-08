@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as TradesImport } from './routes/trades'
 import { Route as OrdersImport } from './routes/orders'
 import { Route as OpenstockImport } from './routes/openstock'
+import { Route as DepotImport } from './routes/depot'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -36,6 +37,12 @@ const OpenstockRoute = OpenstockImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DepotRoute = DepotImport.update({
+  id: '/depot',
+  path: '/depot',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -51,6 +58,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/depot': {
+      id: '/depot'
+      path: '/depot'
+      fullPath: '/depot'
+      preLoaderRoute: typeof DepotImport
       parentRoute: typeof rootRoute
     }
     '/openstock': {
@@ -81,6 +95,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/depot': typeof DepotRoute
   '/openstock': typeof OpenstockRoute
   '/orders': typeof OrdersRoute
   '/trades': typeof TradesRoute
@@ -88,6 +103,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/depot': typeof DepotRoute
   '/openstock': typeof OpenstockRoute
   '/orders': typeof OrdersRoute
   '/trades': typeof TradesRoute
@@ -96,6 +112,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/depot': typeof DepotRoute
   '/openstock': typeof OpenstockRoute
   '/orders': typeof OrdersRoute
   '/trades': typeof TradesRoute
@@ -103,15 +120,16 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/openstock' | '/orders' | '/trades'
+  fullPaths: '/' | '/depot' | '/openstock' | '/orders' | '/trades'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/openstock' | '/orders' | '/trades'
-  id: '__root__' | '/' | '/openstock' | '/orders' | '/trades'
+  to: '/' | '/depot' | '/openstock' | '/orders' | '/trades'
+  id: '__root__' | '/' | '/depot' | '/openstock' | '/orders' | '/trades'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DepotRoute: typeof DepotRoute
   OpenstockRoute: typeof OpenstockRoute
   OrdersRoute: typeof OrdersRoute
   TradesRoute: typeof TradesRoute
@@ -119,6 +137,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DepotRoute: DepotRoute,
   OpenstockRoute: OpenstockRoute,
   OrdersRoute: OrdersRoute,
   TradesRoute: TradesRoute,
@@ -135,6 +154,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/depot",
         "/openstock",
         "/orders",
         "/trades"
@@ -142,6 +162,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/depot": {
+      "filePath": "depot.tsx"
     },
     "/openstock": {
       "filePath": "openstock.tsx"

@@ -39,5 +39,11 @@
   "Invested Capital": "Invested Capital",
   "Loading Open Stock...": "Loading Open Stock...",
   "Error loading open stock": "Error loading open stock",
-  "Date": "Date"
+  "Date": "Date",
+  "Depot": "Depot",
+  "Depot Value": "Depot Value",
+  "Set Depot Value": "Set Depot Value",
+  "Set": "Set",
+  "Loading Depot...": "Loading Depot...",
+  "Error loading depot": "Error loading depot"
 }

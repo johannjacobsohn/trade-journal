@@ -22,3 +22,8 @@ model Order {
   side     String
   date     DateTime @default(now())
 }
+
+model Depot {
+  id    Int    @id
+  value Float
+}
