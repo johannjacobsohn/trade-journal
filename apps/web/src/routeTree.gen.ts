@@ -11,10 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TradesImport } from './routes/trades'
 import { Route as OrdersImport } from './routes/orders'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const TradesRoute = TradesImport.update({
+  id: '/trades',
+  path: '/trades',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const OrdersRoute = OrdersImport.update({
   id: '/orders',
@@ -46,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersImport
       parentRoute: typeof rootRoute
     }
+    '/trades': {
+      id: '/trades'
+      path: '/trades'
+      fullPath: '/trades'
+      preLoaderRoute: typeof TradesImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +68,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/orders': typeof OrdersRoute
+  '/trades': typeof TradesRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/orders': typeof OrdersRoute
+  '/trades': typeof TradesRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/orders': typeof OrdersRoute
+  '/trades': typeof TradesRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/orders'
+  fullPaths: '/' | '/orders' | '/trades'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/orders'
-  id: '__root__' | '/' | '/orders'
+  to: '/' | '/orders' | '/trades'
+  id: '__root__' | '/' | '/orders' | '/trades'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OrdersRoute: typeof OrdersRoute
+  TradesRoute: typeof TradesRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OrdersRoute: OrdersRoute,
+  TradesRoute: TradesRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +116,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/orders"
+        "/orders",
+        "/trades"
       ]
     },
     "/": {
@@ -105,6 +125,9 @@ export const routeTree = rootRoute
     },
     "/orders": {
       "filePath": "orders.tsx"
+    },
+    "/trades": {
+      "filePath": "trades.tsx"
     }
   }
 }

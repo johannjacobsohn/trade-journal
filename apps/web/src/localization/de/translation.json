@@ -1,6 +1,6 @@
 {
   "Home": "Startseite",
-  "Orders": "Bestellungen",
+  "Orders": "Orders",
   "ID": "ID",
   "Symbol": "Symbol",
   "Quantity": "Menge",
@@ -14,7 +14,7 @@
   "Delete": "Löschen",
   "Add Order": "Order hinzufügen",
   "All fields are required!": "Alle Felder sind Pflichtfelder!",
-  "Loading Orders...": "Lade Bestellungen...",
+  "Loading Orders...": "Lade Orders...",
   "Error loading orders": "Fehler beim Laden der Orders",
   "Error": "Fehler",
   "Create Order": "Order hinzufügen",
@@ -28,5 +28,11 @@
   "Buy": "Kaufen",
   "Sell": "Verkaufen",
   "Ascending": "Aufsteigend",
-  "Descending": "Absteigend"
+  "Descending": "Absteigend",
+  "Trades": "Trades",
+  "Total Quantity": "Gesamtmenge",
+  "Average Price": "Durchschnittspreis",
+  "Realized PnL": "Realisierter G/V",
+  "Loading Trades...": "Lade Trades...",
+  "Error loading trades": "Fehler beim Laden der Trades"
 }

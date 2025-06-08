@@ -27,5 +27,11 @@
   "Buy": "Buy",
   "Sell": "Sell",
   "Ascending": "Ascending",
-  "Descending": "Descending"
+  "Descending": "Descending",
+  "Trades": "Trades",
+  "Total Quantity": "Total Quantity",
+  "Average Price": "Average Price",
+  "Realized PnL": "Realized PnL",
+  "Loading Trades...": "Loading Trades...",
+  "Error loading trades": "Error loading trades"
 }
