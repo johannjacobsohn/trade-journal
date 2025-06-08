@@ -16,8 +16,20 @@ function App() {
   const queryClient = useQueryClient();
   const importMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch('/api/orders/import-dummy', { method: 'POST' });
+      const res = await fetch('/api/dev/import-dummy', { method: 'POST' });
       if (!res.ok) throw new Error('Import failed');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    }
+  });
+
+
+  const emptyDbMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch('/api/dev/empty-db', { method: 'POST' });
+      if (!res.ok) throw new Error('Empty DB failed');
       return res.json();
     },
     onSuccess: () => {
@@ -105,48 +117,66 @@ function App() {
 
       <Grid mt="6" columns={{ 'md': "2", 'lg': "3" }} gap="4">
         <Card size="4">
-          <Heading as="h2" size="6" mb="3">{t("Orders")}</Heading>
-          <Text>{t("Manage your orders here. You can add, edit, and delete orders.")}</Text>
-          <Button asChild>
-            <Link to="/orders">{t("Go to Orders")}</Link>
-          </Button>
+          <Flex direction="column" gap="2">
+            <Heading as="h2" size="6" mb="3">{t("Orders")}</Heading>
+            <Text>{t("Manage your orders here. You can add, edit, and delete orders.")}</Text>
+            <Button asChild>
+              <Link to="/orders">{t("Go to Orders")}</Link>
+            </Button>
+          </Flex>
         </Card>
         <Card size="4">
-          <Heading as="h2" size="6" mb="3">{t("Trades")}</Heading>
-          <Text>{t("View and manage your trades. You can add, edit, and delete trades.")}</Text>
-          <Button asChild>
-            <Link to="/trades">{t("Go to Trades")}</Link>
-          </Button>
+          <Flex direction="column" gap="2">
+            <Heading as="h2" size="6" mb="3">{t("Trades")}</Heading>
+            <Text>{t("View and manage your trades. You can add, edit, and delete trades.")}</Text>
+            <Button asChild>
+              <Link to="/trades">{t("Go to Trades")}</Link>
+            </Button>
+          </Flex>
         </Card>
         <Card size="4">
-          <Heading as="h2" size="6" mb="3">{t("Open Positions")}</Heading>
-          <Text>{t("View your Open Positions and their current status.")}</Text>
-          <Button asChild>
-            <Link to="/openstock">{t("Go to Open Positions")}</Link>
-          </Button>
+          <Flex direction="column" gap="2">
+
+            <Heading as="h2" size="6" mb="3">{t("Open Positions")}</Heading>
+            <Text>{t("View your Open Positions and their current status.")}</Text>
+            <Button asChild>
+              <Link to="/openstock">{t("Go to Open Positions")}</Link>
+            </Button>
+          </Flex>
         </Card>
         <Card size="4">
-          <Heading as="h2" size="6" mb="3">{t("Depot")}</Heading>
-          <Text>{t("View your depot and its current status.")}</Text>
-          <Button asChild>
-            <Link to="/depot">{t("Go to Depot")}</Link>
-          </Button>
+          <Flex direction="column" gap="2">
+
+            <Heading as="h2" size="6" mb="3">{t("Depot")}</Heading>
+            <Text>{t("View your depot and its current status.")}</Text>
+            <Button asChild>
+              <Link to="/depot">{t("Go to Depot")}</Link>
+            </Button>
+          </Flex>
         </Card>
         <Card size="4">
-          <Heading as="h2" size="6" mb="3">{t("Analytics")}</Heading>
-          <Text>{t("View your trading analytics and performance metrics.")}</Text>
-          <Button asChild>
-            <Link to="/analytics">{t("Go to Analytics")}</Link>
-          </Button>
+          <Flex direction="column" gap="2">
+
+            <Heading as="h2" size="6" mb="3">{t("Analytics")}</Heading>
+            <Text>{t("View your trading analytics and performance metrics.")}</Text>
+            <Button asChild>
+              <Link to="/analytics">{t("Go to Analytics")}</Link>
+            </Button>
+          </Flex>
         </Card>
       </Grid>
 
 
       <Card mt="6" size="4">
         <Heading as="h2" size="6" mb="3">{t("Development")}</Heading>
-        <Button onClick={() => importMutation.mutate()} disabled={importMutation.isPending}>
-          {importMutation.isPending ? t('Importing...') : t('Import Dummy Data')}
-        </Button>
+        <Flex gap="2">
+          <Button onClick={() => importMutation.mutate()} disabled={importMutation.isPending}>
+            {importMutation.isPending ? t('Importing...') : t('Import Dummy Data')}
+          </Button>
+          <Button color="red" onClick={() => emptyDbMutation.mutate()} disabled={emptyDbMutation.isPending}>
+            {emptyDbMutation.isPending ? t('Emptying...') : t('Empty Database')}
+          </Button>
+        </Flex>
       </Card>
     </>
   )
