@@ -1,6 +1,9 @@
 import React from 'react';
-import { Table, Button, Popover, TextField, Flex, Box } from '@radix-ui/themes';
+import { Table, Button, Popover } from '@radix-ui/themes';
 import { useState } from 'react';
+import { OrdersForm } from './OrdersForm';
+import { useTranslation } from 'react-i18next';
+import type { OrdersFormValues } from './OrdersForm';
 
 export type Order = {
   id: number;
@@ -19,17 +22,30 @@ interface OrdersTableProps {
 }
 
 export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, deletingId, onEdit, editOrderMutation }) =>{ 
-    
-  const [editForm, setEditForm] = useState<Order>({ id: 0, symbol: '', quantity: 0, price: 0, side: 'buy' });
+  const { t } = useTranslation();
 
-  function handleEditInput(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    const { name, value } = event.target;
-    setEditForm(() => ({ ...editForm, [name]: value }));
+  const [editForm, setEditForm] = useState<Order>({ id: 0, symbol: '', quantity: 0, price: 0, side: 'buy' });
+  const [editError, setEditError] = useState<string | null>(null);
+
+  function handleEditInput(value: OrdersFormValues) {
+    setEditForm((prev) => ({
+      ...prev,
+      ...value,
+      id: prev.id,
+      quantity: Number(value.quantity),
+      price: Number(value.price),
+    }));
   }
-    
 
   function handleEditSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    setEditError(null);
+    if (!editForm.symbol || !editForm.quantity || !editForm.price || !editForm.side) {
+      setEditError('Alle Felder sind Pflichtfelder!');
+      return;
+    }
+
     if (onEdit) {
       onEdit(editForm);
     }
@@ -39,12 +55,12 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
     <Table.Root variant='surface' size="3">
       <Table.Header>
         <Table.Row>
-          <Table.ColumnHeaderCell>ID</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Symbol</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Quantity</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Price</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Side</Table.ColumnHeaderCell>
-          {(onEdit || onDelete) && <Table.ColumnHeaderCell>Aktion</Table.ColumnHeaderCell>}
+          <Table.ColumnHeaderCell>{t('ID')}</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>{t('Symbol')}</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>{t('Quantity')}</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>{t('Price')}</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>{t('Side')}</Table.ColumnHeaderCell>
+          {(onEdit || onDelete) && <Table.ColumnHeaderCell>{t('Action')}</Table.ColumnHeaderCell>}
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -58,61 +74,33 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
             {(onEdit || onDelete) && (
               <Table.Cell>
                 {onEdit && (
-
                   <Popover.Root onOpenChange={() => {
                     setEditForm({ ...order });
-                  }
-                  }>
+                  }}>
                     <Popover.Trigger>
                       <Button
                         color="blue"
                         variant="soft"
                         size="1"
-                        onClick={() => onEdit(order)}
                         style={{ marginRight: 8 }}
                       >
-                        Bearbeiten
+                        {t('Edit')}
                       </Button>
                     </Popover.Trigger>
                     <Popover.Content style={{ maxWidth: 400 }}>
-                      Order bearbeiten
-                      <form onSubmit={handleEditSubmit}>
-                        <Flex direction="column" gap="3">
-                          <TextField.Root
-                            placeholder="Symbol"
-                            name="symbol"
-                            value={editForm.symbol}
-                            onChange={handleEditInput}
-                          />
-                          <TextField.Root
-                            placeholder="Menge"
-                            name="quantity"
-                            type="number"
-                            value={editForm.quantity}
-                            onChange={handleEditInput}
-                          />
-                          <TextField.Root
-                            placeholder="Preis"
-                            name="price"
-                            type="number"
-                            value={editForm.price}
-                            onChange={handleEditInput}
-                          />
-                          <Box>
-                            <select name="side" value={editForm.side} onChange={handleEditInput} style={{ width: '100%', padding: 8 }}>
-                              <option value="buy">Buy</option>
-                              <option value="sell">Sell</option>
-                            </select>
-                          </Box>
-                          {/* {editError && <Box style={{ color: 'red' }}>{editError}</Box>} */}
-                          <Button type="submit" loading={editOrderMutation?.isPending} disabled={editOrderMutation?.isPending}>
-                            Speichern
-                          </Button>
-                        </Flex>
+                      {t('Edit Order')}
+                      <OrdersForm 
+                        values={editForm}
+                        onSubmit={handleEditSubmit}
+                        onChange={handleEditInput}
+                        submitLabel={t('Save')}
+                        loading={editOrderMutation?.isPending || false}
+                        disabled={editOrderMutation?.isPending || false}
+                        error={editError}
+                      />
 
-                      </form>
                       <Popover.Close>
-                        <Button variant="soft" color="gray" mt="3" style={{ width: '100%' }}>Abbrechen</Button>
+                        <Button variant="soft" color="gray" mt="3" style={{ width: '100%' }}>{t('Cancel')}</Button>
                       </Popover.Close>
                     </Popover.Content>
                   </Popover.Root>
@@ -126,7 +114,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
                     loading={deletingId === order.id}
                     disabled={deletingId === order.id}
                   >
-                    Löschen
+                    {t('Delete')}
                   </Button>
                 )}
               </Table.Cell>

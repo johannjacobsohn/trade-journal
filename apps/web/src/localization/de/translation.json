@@ -1,4 +1,25 @@
 {
   "Home": "Startseite",
-  "Orders": "Bestellungen"
+  "Orders": "Bestellungen",
+  "ID": "ID",
+  "Symbol": "Symbol",
+  "Quantity": "Menge",
+  "Price": "Preis",
+  "Side": "Richtung",
+  "Action": "Aktion",
+  "Edit": "Bearbeiten",
+  "Edit Order": "Order bearbeiten",
+  "Save": "Speichern",
+  "Cancel": "Abbrechen",
+  "Delete": "Löschen",
+  "Add Order": "Order hinzufügen",
+  "All fields are required!": "Alle Felder sind Pflichtfelder!",
+  "Loading Orders...": "Lade Bestellungen...",
+  "Error loading orders": "Fehler beim Laden der Orders",
+  "Error": "Fehler",
+  "Create Order": "Order hinzufügen",
+  "Submit": "Hinzufügen",
+  "Hinzufügen": "Hinzufügen",
+  "Order hinzufügen": "Order hinzufügen",
+  "Abbrechen": "Abbrechen"
 }

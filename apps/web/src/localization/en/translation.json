@@ -1,4 +1,24 @@
 {
   "Home": "Dashboard",
-  "Orders": "Orders"
+  "Orders": "Orders",
+  "ID": "ID",
+  "Symbol": "Symbol",
+  "Quantity": "Quantity",
+  "Price": "Price",
+  "Side": "Side",
+  "Action": "Action",
+  "Edit": "Edit",
+  "Edit Order": "Edit Order",
+  "Save": "Save",
+  "Cancel": "Cancel",
+  "Delete": "Delete",
+  "Add Order": "Add Order",
+  "All fields are required!": "All fields are required!",
+  "Loading Orders...": "Loading Orders...",
+  "Error": "Error",
+  "Create Order": "Add Order",
+  "Submit": "Add",
+  "Hinzufügen": "Add",
+  "Order hinzufügen": "Add Order",
+  "Abbrechen": "Cancel"
 }
