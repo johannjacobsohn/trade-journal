@@ -159,7 +159,6 @@ function App() {
         </Card>
         <Card size="4">
           <Flex direction="column" gap="2">
-
             <Heading as="h2" size="6" mb="3">{t("Analytics")}</Heading>
             <Text>{t("View your trading analytics and performance metrics.")}</Text>
             <Button asChild>
