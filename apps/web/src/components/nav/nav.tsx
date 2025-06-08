@@ -37,7 +37,7 @@ export function Nav(){
         <Link to="/openstock">
           <Flex align="center" gap="2">
             <FiTrendingUp size="20" />
-            <Text size="3">{t("Open Stock Positions")}</Text>
+            <Text size="3">{t("Open Positions")}</Text>
           </Flex>
         </Link>
       </li>

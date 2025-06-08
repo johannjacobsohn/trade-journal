@@ -43,7 +43,7 @@ function OpenStockPage() {
 
   return (
     <Flex direction={'column'} gap="6">
-      <Heading as="h1" size="8">{t('Open Stock Positions')}</Heading>
+      <Heading as="h1" size="8">{t('Open Positions')}</Heading>
       <div style={{display:'flex',gap:8,marginBottom:16}}>
         <SortFilter
           filterValue={filter}

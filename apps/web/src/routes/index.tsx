@@ -119,10 +119,10 @@ function App() {
           </Button>
         </Card>
         <Card size="4">
-          <Heading as="h2" size="6" mb="3">{t("Open Stock Positions")}</Heading>
-          <Text>{t("View your open stock positions and their current status.")}</Text>
+          <Heading as="h2" size="6" mb="3">{t("Open Positions")}</Heading>
+          <Text>{t("View your Open Positions and their current status.")}</Text>
           <Button asChild>
-            <Link to="/openstock">{t("Go to Open Stock Positions")}</Link>
+            <Link to="/openstock">{t("Go to Open Positions")}</Link>
           </Button>
         </Card>
         <Card size="4">
