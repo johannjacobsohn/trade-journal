@@ -37,7 +37,7 @@ export const Route = createRootRoute({
             />
           </Flex>
 
-          <main className="main-content" style={{ height: "100vh", overflow: "scroll"}}>
+          <main className="main-content" style={{ height: "100vh", overflow: "scroll", flexGrow: 1 }}>
             <Box p="6" pt="9">
               <Outlet />
             </Box>

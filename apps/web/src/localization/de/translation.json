@@ -78,5 +78,8 @@
   "Development": "Entwicklung",
   "Importing...": "Importiere...",
   "Emptying...": "Leere...",
-  "Empty Database": "Datenbank leeren"
+  "Empty Database": "Datenbank leeren",
+  "Depot Overview": "Depot-Übersicht",
+  "Invested Capital in Open Positions": "Investiertes Kapital in offenen Positionen",
+  "Total Value": "Gesamtwert"
 }

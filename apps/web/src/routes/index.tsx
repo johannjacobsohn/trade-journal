@@ -5,6 +5,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Link } from '@/components/link'
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import { OrdersChartSection } from '@/components/orders/OrdersChartSection';
+import { DepotOverviewCard } from '@/components/DepotOverviewCard';
 
 
 export const Route = createFileRoute('/')({
@@ -57,6 +58,8 @@ function App() {
           {t("This is a simple application to track your trades. You can add, edit, and delete trades, and view your trading history. Feel free to explore the application and start tracking your trades!")}
         </Text>
       </Card>
+
+      <DepotOverviewCard />
 
       <OrdersChartSection />
 
