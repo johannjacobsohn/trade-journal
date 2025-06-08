@@ -15,6 +15,7 @@ import { Route as TradesImport } from './routes/trades'
 import { Route as OrdersImport } from './routes/orders'
 import { Route as OpenstockImport } from './routes/openstock'
 import { Route as DepotImport } from './routes/depot'
+import { Route as AnalyticsImport } from './routes/analytics'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -43,6 +44,12 @@ const DepotRoute = DepotImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AnalyticsRoute = AnalyticsImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -58,6 +65,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsImport
       parentRoute: typeof rootRoute
     }
     '/depot': {
@@ -95,6 +109,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/depot': typeof DepotRoute
   '/openstock': typeof OpenstockRoute
   '/orders': typeof OrdersRoute
@@ -103,6 +118,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/depot': typeof DepotRoute
   '/openstock': typeof OpenstockRoute
   '/orders': typeof OrdersRoute
@@ -112,6 +128,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/depot': typeof DepotRoute
   '/openstock': typeof OpenstockRoute
   '/orders': typeof OrdersRoute
@@ -120,15 +137,29 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/depot' | '/openstock' | '/orders' | '/trades'
+  fullPaths:
+    | '/'
+    | '/analytics'
+    | '/depot'
+    | '/openstock'
+    | '/orders'
+    | '/trades'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/depot' | '/openstock' | '/orders' | '/trades'
-  id: '__root__' | '/' | '/depot' | '/openstock' | '/orders' | '/trades'
+  to: '/' | '/analytics' | '/depot' | '/openstock' | '/orders' | '/trades'
+  id:
+    | '__root__'
+    | '/'
+    | '/analytics'
+    | '/depot'
+    | '/openstock'
+    | '/orders'
+    | '/trades'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   DepotRoute: typeof DepotRoute
   OpenstockRoute: typeof OpenstockRoute
   OrdersRoute: typeof OrdersRoute
@@ -137,6 +168,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
   DepotRoute: DepotRoute,
   OpenstockRoute: OpenstockRoute,
   OrdersRoute: OrdersRoute,
@@ -154,6 +186,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/analytics",
         "/depot",
         "/openstock",
         "/orders",
@@ -162,6 +195,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/analytics": {
+      "filePath": "analytics.tsx"
     },
     "/depot": {
       "filePath": "depot.tsx"

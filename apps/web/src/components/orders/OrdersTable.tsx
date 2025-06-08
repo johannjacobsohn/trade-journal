@@ -50,6 +50,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
       setEditError('Alle Felder sind Pflichtfelder!');
       return;
     }
+    console.log('editForm', editForm);
 
     if (onEdit) {
       onEdit(editForm);

@@ -28,3 +28,8 @@ model Depot {
   id    Int    @id
   value Float
 }
+
+model TradeMeta {
+  symbol   String  @id
+  notes    String?
+}
