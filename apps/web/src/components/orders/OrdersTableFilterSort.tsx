@@ -61,7 +61,7 @@ export const OrdersTableFilterSort: React.FC<OrdersTableFilterSortProps> = ({
       <Popover.Root>
         <Popover.Trigger>
           <IconButton variant='ghost' color='gray'>
-            <FaSortNumericDownAlt size={20} aria-label={t('Filter')} />
+            <FaSortNumericDownAlt size={20} aria-label={t('Sort')} />
           </IconButton>
         </Popover.Trigger>
         <Popover.Content>

@@ -14,7 +14,10 @@
     "preview": "vite preview",
     "prepare": "husky",
     "docker-build": "docker build -t frontend .",
-    "docker-run": "docker run -p 8080:8080 frontend"
+    "docker-run": "docker run -p 8080:8080 frontend",
+    "test:e2e": "playwright test --config=playwright.config.ts",
+    "test:e2e:headed": "playwright test --headed --config=playwright.config.ts",
+    "test:e2e:report": "playwright show-report"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,ts,tsx,jsx}": "eslint --cache --fix"
@@ -42,6 +45,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin": "^2.10.0",
     "@stylistic/eslint-plugin-jsx": "^2.10.0",
     "@testing-library/react": "^16.0.1",
@@ -57,6 +61,7 @@
     "husky": "^9.1.6",
     "jsdom": "^25.0.1",
     "lint-staged": "^15.2.10",
+    "playwright": "^1.52.0",
     "postcss": "^8.4.47",
     "postcss-simple-vars": "^7.0.1",
     "sass": "^1.80.5",
