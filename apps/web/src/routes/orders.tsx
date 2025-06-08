@@ -33,14 +33,13 @@ function OrdersPage() {
     },
   });
 
-  // Dialog State
   const [open, setOpen] = React.useState(false);
-  const [form, setForm] = React.useState<OrdersFormValues>({ symbol: '', quantity: '', price: '', side: 'buy' });
+  const [form, setForm] = React.useState<OrdersFormValues>({ symbol: '', quantity: '', price: '', side: 'buy', date: '' });
   const [formError, setFormError] = React.useState<string | null>(null);
   const [deletingId, setDeletingId] = React.useState<number | null>(null);
 
   const addOrderMutation = useMutation({
-    mutationFn: async (order: { symbol: string; quantity: number; price: number; side: 'buy' | 'sell' }) => {
+    mutationFn: async (order: { symbol: string; quantity: number; price: number; side: 'buy' | 'sell'; date: string }) => {
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +50,7 @@ function OrdersPage() {
     },
     onSuccess: () => {
       setOpen(false);
-      setForm({ symbol: '', quantity: '', price: '', side: 'buy' });
+      setForm({ symbol: '', quantity: '', price: '', side: 'buy', date: '' });
       setFormError(null);
       queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
@@ -77,11 +76,11 @@ function OrdersPage() {
   });
 
   const editOrderMutation = useMutation({
-    mutationFn: async (order: { id: number; symbol: string; quantity: number; price: number; side: 'buy' | 'sell' }) => {
+    mutationFn: async (order: { id: number; symbol: string; quantity: number; price: number; side: 'buy' | 'sell'; date?: string }) => {
       const res = await fetch(`/api/orders/${order.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbol: order.symbol, quantity: order.quantity, price: order.price, side: order.side }),
+        body: JSON.stringify({ symbol: order.symbol, quantity: order.quantity, price: order.price, side: order.side, date: order.date }),
       });
       if (!res.ok) throw new Error('Fehler beim Bearbeiten der Order');
       return res.json();
@@ -94,7 +93,7 @@ function OrdersPage() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError(null);
-    if (!form.symbol || !form.quantity || !form.price || !form.side) {
+    if (!form.symbol || !form.quantity || !form.price || !form.side || !form.date) {
       setFormError(t('All fields are required!'));
       return;
     }
@@ -103,6 +102,7 @@ function OrdersPage() {
       quantity: Number(form.quantity),
       price: Number(form.price),
       side: form.side as 'buy' | 'sell',
+      date: new Date(form.date).toISOString(),
     });
   }
 

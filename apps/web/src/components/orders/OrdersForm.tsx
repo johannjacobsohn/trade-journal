@@ -6,6 +6,7 @@ export type OrdersFormValues = {
   quantity: string | number;
   price: string | number;
   side: 'buy' | 'sell';
+  date?: string;
 };
 
 interface OrdersFormProps {
@@ -63,6 +64,14 @@ export const OrdersForm: React.FC<OrdersFormProps> = ({
             <option value="sell">Sell</option>
           </select>
         </Box>
+        <TextField.Root
+          placeholder="Datum"
+          name="date"
+          type="datetime-local"
+          value={values.date || ''}
+          onChange={handleInput}
+          disabled={disabled}
+        />
         {error && <Box style={{ color: 'red' }}>{error}</Box>}
         <Button type="submit" loading={loading} disabled={loading || disabled}>
           {submitLabel}

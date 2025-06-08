@@ -9,9 +9,10 @@ const orderSchema = {
     symbol: { type: 'string' },
     quantity: { type: 'number' },
     price: { type: 'number' },
-    side: { type: 'string', enum: ['buy', 'sell'] }
+    side: { type: 'string', enum: ['buy', 'sell'] },
+    date: { type: 'string', format: 'date-time' }
   },
-  required: ['id', 'symbol', 'quantity', 'price', 'side']
+  required: ['id', 'symbol', 'quantity', 'price', 'side', 'date']
 }
 
 const orderInputSchema = {
@@ -20,9 +21,10 @@ const orderInputSchema = {
     symbol: { type: 'string' },
     quantity: { type: 'number' },
     price: { type: 'number' },
-    side: { type: 'string', enum: ['buy', 'sell'] }
+    side: { type: 'string', enum: ['buy', 'sell'] },
+    date: { type: 'string', format: 'date-time' }
   },
-  required: ['symbol', 'quantity', 'price', 'side']
+  required: ['symbol', 'quantity', 'price', 'side'],
 }
 
 const orderIdParamSchema = {
@@ -39,6 +41,7 @@ interface Order {
   quantity: number
   price: number
   side: 'buy' | 'sell'
+  date: string // ISO date string
 }
 
 const prisma = new PrismaClient()
@@ -159,8 +162,8 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       }
     },
     async handler(request, reply) {
-      const { symbol, quantity, price, side, ...rest } = request.body as Omit<Order, 'id'>
-      const data = { symbol, quantity,  price, side } 
+      const { symbol, quantity, price, side, date, ...rest } = request.body as Omit<Order, 'id'>
+      const data = { symbol, quantity,  price, side, date } 
       
       for (const key in data) {
         if (data[key as keyof typeof data] === undefined) {

@@ -11,6 +11,7 @@ export type Order = {
   quantity: number;
   price: number;
   side: 'buy' | 'sell';
+  date: string;
 };
 
 interface OrdersTableProps {
@@ -24,7 +25,7 @@ interface OrdersTableProps {
 export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, deletingId, onEdit, editOrderMutation }) =>{ 
   const { t } = useTranslation();
 
-  const [editForm, setEditForm] = useState<Order>({ id: 0, symbol: '', quantity: 0, price: 0, side: 'buy' });
+  const [editForm, setEditForm] = useState<Order>({ id: 0, symbol: '', quantity: 0, price: 0, side: 'buy', date: '' });
   const [editError, setEditError] = useState<string | null>(null);
 
   function handleEditInput(value: OrdersFormValues) {
@@ -60,6 +61,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
           <Table.ColumnHeaderCell>{t('Quantity')}</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>{t('Price')}</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>{t('Side')}</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>{t('Date')}</Table.ColumnHeaderCell>
           {(onEdit || onDelete) && <Table.ColumnHeaderCell>{t('Action')}</Table.ColumnHeaderCell>}
         </Table.Row>
       </Table.Header>
@@ -71,6 +73,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
             <Table.Cell>{order.quantity}</Table.Cell>
             <Table.Cell>{order.price}</Table.Cell>
             <Table.Cell>{order.side}</Table.Cell>
+            <Table.Cell>{order.date ? new Date(order.date).toLocaleString() : ''}</Table.Cell>
             {(onEdit || onDelete) && (
               <Table.Cell>
                 {onEdit && (
