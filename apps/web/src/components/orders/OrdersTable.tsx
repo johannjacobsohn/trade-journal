@@ -12,6 +12,7 @@ export type Order = {
   price: number;
   side: 'buy' | 'sell';
   date: string;
+  comments?: string;
 };
 
 interface OrdersTableProps {
@@ -25,16 +26,19 @@ interface OrdersTableProps {
 export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, deletingId, onEdit, editOrderMutation }) =>{ 
   const { t } = useTranslation();
 
-  const [editForm, setEditForm] = useState<Order>({ id: 0, symbol: '', quantity: 0, price: 0, side: 'buy', date: '' });
+  const [editForm, setEditForm] = useState<Order>({ id: 0, symbol: '', quantity: 0, price: 0, side: 'buy', date: '', comments: '' });
   const [editError, setEditError] = useState<string | null>(null);
 
   function handleEditInput(value: OrdersFormValues) {
+    console.log('handleEditInput', value);
     setEditForm((prev) => ({
       ...prev,
       ...value,
       id: prev.id,
       quantity: Number(value.quantity),
       price: Number(value.price),
+      date: value.date ? new Date(value.date).toISOString() : '',
+      comments: value.comments || '',
     }));
   }
 
@@ -62,6 +66,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
           <Table.ColumnHeaderCell>{t('Price')}</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>{t('Side')}</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>{t('Date')}</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>{t('Comments')}</Table.ColumnHeaderCell>
           {(onEdit || onDelete) && <Table.ColumnHeaderCell>{t('Action')}</Table.ColumnHeaderCell>}
         </Table.Row>
       </Table.Header>
@@ -74,6 +79,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ orders, onDelete, dele
             <Table.Cell>{order.price}</Table.Cell>
             <Table.Cell>{order.side}</Table.Cell>
             <Table.Cell>{order.date ? new Date(order.date).toLocaleString() : ''}</Table.Cell>
+            <Table.Cell>{order.comments || ''}</Table.Cell>
             {(onEdit || onDelete) && (
               <Table.Cell>
                 {onEdit && (

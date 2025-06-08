@@ -34,12 +34,12 @@ function OrdersPage() {
   });
 
   const [open, setOpen] = React.useState(false);
-  const [form, setForm] = React.useState<OrdersFormValues>({ symbol: '', quantity: '', price: '', side: 'buy', date: '' });
+  const [form, setForm] = React.useState<OrdersFormValues>({ symbol: '', quantity: '', price: '', side: 'buy', date: '', comments: '' });
   const [formError, setFormError] = React.useState<string | null>(null);
   const [deletingId, setDeletingId] = React.useState<number | null>(null);
 
   const addOrderMutation = useMutation({
-    mutationFn: async (order: { symbol: string; quantity: number; price: number; side: 'buy' | 'sell'; date: string }) => {
+    mutationFn: async (order: { symbol: string; quantity: number; price: number; side: 'buy' | 'sell'; date: string; comments?: string }) => {
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,11 +76,11 @@ function OrdersPage() {
   });
 
   const editOrderMutation = useMutation({
-    mutationFn: async (order: { id: number; symbol: string; quantity: number; price: number; side: 'buy' | 'sell'; date?: string }) => {
+    mutationFn: async (order: { id: number; symbol: string; quantity: number; price: number; side: 'buy' | 'sell'; date?: string; comments?: string }) => {
       const res = await fetch(`/api/orders/${order.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbol: order.symbol, quantity: order.quantity, price: order.price, side: order.side, date: order.date }),
+        body: JSON.stringify(order),
       });
       if (!res.ok) throw new Error('Fehler beim Bearbeiten der Order');
       return res.json();
@@ -103,6 +103,7 @@ function OrdersPage() {
       price: Number(form.price),
       side: form.side as 'buy' | 'sell',
       date: new Date(form.date).toISOString(),
+      comments: form.comments,
     });
   }
 
@@ -111,13 +112,7 @@ function OrdersPage() {
   }
 
   function handleEditSubmit(editOrder: Order) {
-    editOrderMutation.mutate({
-      id: editOrder.id,
-      symbol: editOrder.symbol,
-      quantity: Number(editOrder.quantity),
-      price: Number(editOrder.price),
-      side: editOrder.side as 'buy' | 'sell',
-    });
+    editOrderMutation.mutate(editOrder)
   }
 
   // if (isLoading) return <div>{t('Loading Orders...')}</div>;

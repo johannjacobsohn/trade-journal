@@ -21,6 +21,7 @@ model Order {
   price    Float
   side     String
   date     DateTime @default(now())
+  comments String? // optional field for order comments
 }
 
 model Depot {

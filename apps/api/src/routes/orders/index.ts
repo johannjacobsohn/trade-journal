@@ -10,7 +10,8 @@ const orderSchema = {
     quantity: { type: 'number' },
     price: { type: 'number' },
     side: { type: 'string', enum: ['buy', 'sell'] },
-    date: { type: 'string', format: 'date-time' }
+    date: { type: 'string', format: 'date-time' },
+    comments: { type: 'string', nullable: true }
   },
   required: ['id', 'symbol', 'quantity', 'price', 'side', 'date']
 }
@@ -18,13 +19,15 @@ const orderSchema = {
 const orderInputSchema = {
   type: 'object',
   properties: {
+    id: { type: 'integer', nullable: true }, // id is optional for creation
     symbol: { type: 'string' },
     quantity: { type: 'number' },
     price: { type: 'number' },
     side: { type: 'string', enum: ['buy', 'sell'] },
-    date: { type: 'string', format: 'date-time' }
+    date: { type: 'string', format: 'date-time' },
+    comments: { type: 'string', nullable: true }
   },
-  required: ['symbol', 'quantity', 'price', 'side'],
+  required: ['symbol', 'quantity', 'price', 'side', 'date'],
 }
 
 const orderIdParamSchema = {
@@ -42,6 +45,7 @@ interface Order {
   price: number
   side: 'buy' | 'sell'
   date: string // ISO date string
+  comments: string
 }
 
 const prisma = new PrismaClient()
@@ -162,8 +166,8 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       }
     },
     async handler(request, reply) {
-      const { symbol, quantity, price, side, date, ...rest } = request.body as Omit<Order, 'id'>
-      const data = { symbol, quantity,  price, side, date } 
+      const { symbol, quantity, price, side, date, comments = "", ...rest } = request.body as Omit<Order, 'id'>
+      const data = { symbol, quantity,  price, side, date, comments } 
       
       for (const key in data) {
         if (data[key as keyof typeof data] === undefined) {
@@ -203,13 +207,24 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
     },
     async handler(request, reply) {
       const id = Number(request.params.id)
-      const { symbol, quantity, price, side } = request.body as Omit<Order, 'id'>
+      const { symbol, quantity, price, side, date, comments = "", ...rest } = request.body as Omit<Order, 'id'>
+      const data = { symbol, quantity,  price, side, date, comments } 
+
+      for (const key in data) {
+        if (data[key as keyof typeof data] === undefined) {
+          reply.code(400)
+          return { error: `Missing field: ${key}` }
+        }
+      }
+      for (const key in rest) {
+        if (key === 'id') continue
+        reply.code(400)
+        return { error: `Unexpected field: ${key}` }
+      }
 
       return prisma.order.update({
         where: { id },
-        data: {
-          symbol, quantity, price, side
-        }
+        data: data
       })
     }
   })

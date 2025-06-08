@@ -7,6 +7,7 @@ export type OrdersFormValues = {
   price: string | number;
   side: 'buy' | 'sell';
   date?: string;
+  comments?: string;
 };
 
 interface OrdersFormProps {
@@ -69,6 +70,13 @@ export const OrdersForm: React.FC<OrdersFormProps> = ({
           name="date"
           type="datetime-local"
           value={values.date || ''}
+          onChange={handleInput}
+          disabled={disabled}
+        />
+        <TextField.Root
+          placeholder="Kommentar"
+          name="comments"
+          value={values.comments || ''}
           onChange={handleInput}
           disabled={disabled}
         />
