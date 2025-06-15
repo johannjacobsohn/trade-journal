@@ -1,5 +1,5 @@
 {
-  "name": "trade-journal-frontend",
+  "name": "web",
   "description": "Frontend for the Trade Journal application, built with React and TypeScript.",
   "private": true,
   "version": "1.0.0",
@@ -7,7 +7,7 @@
   "packageManager": "pnpm@9.0.0",
   "author": "Johann Jacobsohn",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 4173",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest --run",
