@@ -22,16 +22,15 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
   fastify.get('/', {
     schema: { response: { 200: analyticsSchema } }
   }, async (_request, _reply) => {
-    // Hole alle Orders
+
     const orders = await prisma.order.findMany();
-    // Gruppiere nach Symbol
+
     const grouped = orders.reduce((acc, order) => {
       if (!acc[order.symbol]) acc[order.symbol] = [];
       acc[order.symbol].push(order);
       return acc;
     }, {} as Record<string, typeof orders>);
 
-    // Ein Trade ist abgeschlossen, wenn buy und sell für ein Symbol existieren
     let completedTrades = 0;
     let wins = 0, losses = 0, winSum = 0, lossSum = 0, holdDurations: number[] = [];
     let grossProfit = 0, grossLoss = 0;
@@ -40,7 +39,6 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       const sells = orders.filter(o => o.side === 'sell');
       if (buys.length && sells.length) {
         completedTrades++;
-        // G/V = Summe Sell - Summe Buy
         const buySum = buys.reduce((sum, o) => sum + o.price * o.quantity, 0);
         const sellSum = sells.reduce((sum, o) => sum + o.price * o.quantity, 0);
         const pnl = sellSum - buySum;
@@ -53,7 +51,7 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
           lossSum += Math.abs(pnl);
           grossLoss += Math.abs(pnl);
         }
-        // Haltedauer: min(buy.date) bis max(sell.date)
+
         const buyDates = buys.map(b => new Date(b.date));
         const sellDates = sells.map(s => new Date(s.date));
         if (buyDates.length && sellDates.length) {
