@@ -1,4 +1,6 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import { PrismaClient } from '@prisma/client'
+
 
 const orderSchema = {
   type: 'object',
@@ -39,11 +41,7 @@ interface Order {
   side: 'buy' | 'sell'
 }
 
-let orders: Order[] = [
-  { id: 1, symbol: 'AAPL', quantity: 10, price: 150, side: 'buy' },
-  { id: 2, symbol: 'GOOGL', quantity: 5, price: 2800, side: 'sell' }
-]
-let nextId = 1
+const prisma = new PrismaClient()
 
 export default async function (fastify: FastifyInstance, opts: FastifyPluginOptions) {
 
@@ -77,7 +75,7 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       }
     },
     async handler (request, reply) {
-      return orders
+      return prisma.order.findMany()
     }
   })
 
@@ -98,7 +96,9 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
     },
     async handler(request, reply) {
       const id = Number(request.params.id)
-      const order = orders.find(o => o.id === id)
+      const order = await prisma.order.findUnique({
+        where: { id }
+      })
       if (!order) {
         reply.code(404)
         return { error: 'Order not found' }
@@ -124,20 +124,22 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
     },
     async handler(request, reply) {
       const { symbol, quantity, price, side } = request.body as Omit<Order, 'id'>
+
       if (!symbol || !quantity || !price || !side) {
         reply.code(400)
         return { error: 'Missing fields' }
       }
-      const order: Order = {
-        id: nextId++,
-        symbol,
-        quantity,
-        price,
-        side
-      }
-      orders.push(order)
+
+      await prisma.order.create({
+        data: {
+          symbol: symbol,
+          quantity: quantity,
+          price: price,
+          side: side
+        }
+      })
+
       reply.code(201)
-      return order
     }
   })
 
@@ -159,14 +161,14 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
     },
     async handler(request, reply) {
       const id = Number(request.params.id)
-      const idx = orders.findIndex(o => o.id === id)
-      if (idx === -1) {
-        reply.code(404)
-        return { error: 'Order not found' }
-      }
       const { symbol, quantity, price, side } = request.body as Omit<Order, 'id'>
-      orders[idx] = { id, symbol, quantity, price, side }
-      return orders[idx]
+
+      return prisma.order.update({
+        where: { id },
+        data: {
+          symbol, quantity, price, side
+        }
+      })
     }
   })
 
@@ -187,14 +189,11 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
     },
     async handler(request, reply) {
       const id = Number(request.params.id)
-      const idx = orders.findIndex(o => o.id === id)
-      if (idx === -1) {
-        reply.code(404)
-        return { error: 'Order not found' }
-      }
-      orders.splice(idx, 1)
-      reply.code(204)
-      return
+
+      return prisma.order.delete({
+        where: { id }
+      })
+
     }
   })
 }
