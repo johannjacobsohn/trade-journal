@@ -130,7 +130,7 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
         return { error: 'Missing fields' }
       }
 
-      await prisma.order.create({
+      const order = await prisma.order.create({
         data: {
           symbol: symbol,
           quantity: quantity,
@@ -140,6 +140,7 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       })
 
       reply.code(201)
+      return order
     }
   })
 
