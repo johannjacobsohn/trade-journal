@@ -65,8 +65,26 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
   )
 
   // Get all orders
-  fastify.get('/', {
+  fastify.get<{
+    Querystring: {
+      symbol?: string
+      side?: 'buy' | 'sell'
+      price?: string
+      quantity?: string
+      sort?: string
+    }
+  }>('/', {
     schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          symbol: { type: 'string' },
+          side: { type: 'string', enum: ['buy', 'sell'] },
+          price: { type: 'string' },
+          quantity: { type: 'string' },
+          sort: { type: 'string' }
+        }
+      },
       response: {
         200: {
           type: 'array',
@@ -75,7 +93,25 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
       }
     },
     async handler (request, reply) {
-      return prisma.order.findMany()
+
+      const where = {
+        symbol: request.query.symbol || undefined,
+        side: request.query.side || undefined,
+        price: request.query.price ? Number(request.query.price) : undefined,
+        quantity: request.query.quantity ? Number(request.query.quantity) : undefined
+      }
+      const orderBy = request.query.sort || 'id'
+      const [orderKey = "id", orderDirection = "asc"] = orderBy.split(':')
+
+      const orders = await prisma.order.findMany({
+        where,
+        orderBy: {
+          [orderKey]: orderDirection
+        }
+      })
+
+
+      return orders
     }
   })
 

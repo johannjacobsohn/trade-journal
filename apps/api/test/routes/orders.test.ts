@@ -41,6 +41,104 @@ import { build } from '../helper'
     assert.ok(Array.isArray(body))
   })
 
+  test('GET /orders supports filtering by symbol', async (t) => {
+    const app = await build(t)
+
+    // Create two orders with different symbols
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 1, price: 100, side: 'buy' }
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'TSLA', quantity: 2, price: 200, side: 'sell' }
+    })
+
+    // Filter by symbol=AAPL
+    const res = await app.inject({
+      method: 'GET',
+      url: '/orders?symbol=AAPL'
+    })
+
+    assert.strictEqual(res.statusCode, 200)
+    const body = JSON.parse(res.body)
+    assert.ok(Array.isArray(body))
+    assert.ok(body.length > 0)
+    body.forEach((order: any) => {
+      assert.strictEqual(order.symbol, 'AAPL')
+    })
+  })
+
+  test('GET /orders supports sorting by price descending', async (t) => {
+    const app = await build(t)
+
+    // Create orders with different prices
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 1, price: 100, side: 'buy' }
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 1, price: 300, side: 'buy' }
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 1, price: 200, side: 'buy' }
+    })
+
+    // Sort by price descending
+    const res = await app.inject({
+      method: 'GET',
+      url: '/orders?sort=price:desc'
+    })
+
+    assert.strictEqual(res.statusCode, 200)
+    const body = JSON.parse(res.body)
+    assert.ok(Array.isArray(body))
+    for (let i = 1; i < body.length; i++) {
+      assert.ok(body[i - 1].price >= body[i].price)
+    }
+  })
+
+  test('GET /orders supports sorting by quantity ascending', async (t) => {
+    const app = await build(t)
+
+    // Create orders with different quantities
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 5, price: 100, side: 'buy' }
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 2, price: 100, side: 'buy' }
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/orders',
+      payload: { symbol: 'AAPL', quantity: 10, price: 100, side: 'buy' }
+    })
+
+    // Sort by quantity ascending
+    const res = await app.inject({
+      method: 'GET',
+      url: '/orders?sort=quantity:asc'
+    })
+
+    assert.strictEqual(res.statusCode, 200)
+    const body = JSON.parse(res.body)
+    assert.ok(Array.isArray(body))
+    for (let i = 1; i < body.length; i++) {
+      assert.ok(body[i - 1].quantity <= body[i].quantity)
+    }
+  })
+
   test('GET /orders/:id returns a specific order', async (t) => {
     const app = await build(t)
 
