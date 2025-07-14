@@ -1,16 +1,20 @@
 services:
   web:
-    container_name: web
     build:
       context: ./apps/web/
       dockerfile: Dockerfile
     restart: always
-    # ports:
-    #   - 8080:8080
+    depends_on:
+      - api
+    networks:
+      - frontend
+    ports:
+      - 8080
+    expose: 
+      - 8080
 
   postgres:
     image: postgres:15
-    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER : $POSTGRES_USER
@@ -21,21 +25,24 @@ services:
     ports:
       - 5432:5432
     networks:
-      - app_network
+      - backend
 
   api:
-    container_name: api
     build:
       context: ./apps/api
       dockerfile: Dockerfile
     restart: always
+    depends_on:
+      - postgres
     networks:
-      - app_network
-    expose:
-      - 3000
+      - backend
+      - frontend
 
 networks:
-  app_network:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
 
 volumes:
   postgres_data:
